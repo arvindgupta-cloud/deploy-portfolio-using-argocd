@@ -4,7 +4,7 @@ metadata:
   name: portfolio-app
   namespace: portfolio
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
