@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Deploy Portfolio
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,8 +21,23 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:v1 -f app/Dockerfile ./app
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }} -f app/Dockerfile ./app
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/portfolio:v1
+          docker push ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }}
+
+      - name: Update Kubernetes Deployment File Tag
+        run: |
+          sed -i 's|IMAGE_TAG|${{ github.sha }}|g' k8s/deployment.yaml
+
+      # --- OPTIONAL: UNCOMMENT BELOW IF GITHUB ACTIONS DEPLOYS DIRECTLY TO KUBERNETES ---
+      # - name: Set up Kubeconfig
+      #   uses: azure/k8s-set-context@v3
+      #   with:
+      #     method: kubeconfig
+      #     kubeconfig: ${{ secrets.KUBECONFIG }}
+      #
+      # - name: Deploy to Kubernetes Cluster
+      #   run: |
+      #     kubectl apply -f k8s/deployment.yaml
