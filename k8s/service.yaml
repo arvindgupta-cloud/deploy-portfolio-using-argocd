@@ -1,6 +1,5 @@
 apiVersion: v1
 kind: Service
-
 metadata:
 name: portfolio-service
 namespace: portfolio
@@ -10,9 +9,8 @@ selector:
 app: portfolio
 
 ports:
-
-  protocol: TCP
-  port: 80
-  targetPort: 80
+- protocol: TCP
+port: 80
+targetPort: 80
 
 type: LoadBalancer
