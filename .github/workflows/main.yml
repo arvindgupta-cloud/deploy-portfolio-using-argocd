@@ -29,15 +29,5 @@ jobs:
 
       - name: Update Kubernetes Deployment File Tag
         run: |
-          sed -i 's|IMAGE_TAG|${{ github.sha }}|g' k8s/deployment.yaml
+          sed -i 's|image: ag126667/portfolio:.*|image: ag126667/portfolio:${{ github.sha }}|g' k8s/deployment.yaml
 
-      # --- OPTIONAL: UNCOMMENT BELOW IF GITHUB ACTIONS DEPLOYS DIRECTLY TO KUBERNETES ---
-      # - name: Set up Kubeconfig
-      #   uses: azure/k8s-set-context@v3
-      #   with:
-      #     method: kubeconfig
-      #     kubeconfig: ${{ secrets.KUBECONFIG }}
-      #
-      # - name: Deploy to Kubernetes Cluster
-      #   run: |
-      #     kubectl apply -f k8s/deployment.yaml
