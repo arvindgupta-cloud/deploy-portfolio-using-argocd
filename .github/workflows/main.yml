@@ -21,8 +21,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }} .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:v1 .
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/portfolio:v1
