@@ -29,7 +29,7 @@ jobs:
 
       - name: Update Kubernetes Deployment File Tag
         run: |
-          sed -i 's|image: ***/portfolio:.*|image: ***/portfolio:${{ github.sha }}|g' k8s/deployment.yaml
+          sed -i 's|image: ${{ secrets.DOCKER_USERNAME }}/portfolio:.*|image: ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }}|g' k8s/deployment.yaml
 
       # ADD THIS NEW STEP BELOW
       - name: Commit and Push Updated YAML to GitHub
