@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: ag126667/portfolio:v1
+          image: ag126667/portfolio:IMAGE_TAG
           ports:
             - containerPort: 80
