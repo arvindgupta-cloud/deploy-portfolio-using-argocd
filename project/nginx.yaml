@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git  # Git repo
     targetRevision: main        # Branch to watch
-    path: cli_approach     # Path in repo with manifests
+    path: declarative_approach     # Path in repo with manifests
   destination:
     server: https://136.112.221.25  # Target cluster, run `argocd cluster list` to see
     namespace: frontend          # Namespace inside that cluster
