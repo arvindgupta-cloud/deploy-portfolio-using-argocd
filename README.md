@@ -33,7 +33,7 @@ deploy-portfolio-using-argocd/
 
 | Component | Technology |
 |-----------|-----------|
-| **Frontend** | HTML5, Tailwind CSS, JavaScript |
+| **Frontend** | HTML5|
 | **Containerization** | Docker, Nginx (Alpine) |
 | **Orchestration** | Kubernetes (K8s) |
 | **Deployment** | ArgoCD (GitOps) |
@@ -57,25 +57,7 @@ git clone https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git
 cd deploy-portfolio-using-argocd
 ```
 
-### 2. Build Docker Image
-
-```bash
-cd app
-docker build -t <your-username>/portfolio:latest .
-docker push <your-username>/portfolio:latest
-```
-
-Replace `<your-username>` with your Docker Hub username.
-
-### 3. Update Image Tag in Deployment
-
-Edit `k8s/deployment.yaml` and update the image reference:
-
-```yaml
-image: <your-username>/portfolio:IMAGE_TAG
-```
-
-### 4. Create a cluster
+### 2. Create a cluster
 ```
 gcloud container clusters create argocd-cluster \
 --zone us-central1-a \
@@ -86,30 +68,8 @@ gcloud container clusters create argocd-cluster \
 
 ```
 gcloud container clusters get-credentials argocd-cluster \
---zone asia-south1-a
+--zone us-central1-a
 ```
-
-### 5. Create Namespace
-
-```bash
-kubectl apply -f k8s/namespace.yaml
-```
-
-### 6. Deploy Manually (Without ArgoCD)
-
-```bash
-kubectl apply -f k8s/
-```
-
-Or deploy using ArgoCD (see ArgoCD Setup below).
-
-### 7. Access the Application
-
-```bash
-kubectl port-forward -n portfolio svc/portfolio-service 8080:80
-```
-
-Visit `http://localhost:8080` in your browser.
 
 ## 🔄 ArgoCD Setup
 
@@ -120,10 +80,12 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
-### Access ArgoCD UI
+### Expose Argo CD using a LoadBalancer service:
 
 ```bash
-kubectl port-forward -n argocd svc/argocd-server 8443:443
+kubectl patch svc argocd-server \
+-n argocd \
+-p '{"spec":{"type":"LoadBalancer"}}'
 ```
 
 Get the initial password:
@@ -149,7 +111,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd
+    repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git
     targetRevision: main
     path: k8s
   destination:
@@ -185,22 +147,6 @@ Creates a dedicated namespace for the portfolio application.
 - **Port:** 80
 - **TargetPort:** 80
 - **Selector:** `app: portfolio`
-
-## 🐳 Docker Configuration
-
-### Dockerfile
-
-```dockerfile
-FROM nginx:alpine
-COPY . /usr/share/nginx/html/
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-- **Base Image:** `nginx:alpine` (minimal, ~40MB)
-- **Static Content:** Copied to Nginx default directory
-- **Port:** 80 (HTTP)
-- **Entrypoint:** Runs Nginx in foreground mode
 
 ## 🌐 Portfolio Features
 
