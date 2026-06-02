@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-apps-factory
+  namespace: argocd
+spec:
+  # 1. THE GENERATOR: It loops through every YAML file inside the apps/ directory
+  generators:
+    - git:
+        repoURL: https://github.com/arvindgupta-cloud/apps-of-apps-argocd.git
+        revision: main
+        files:
+          - path: "apps/*.yaml" 
+
+  # 2. THE TEMPLATE: The blueprint that reads parameters from your files below
+  template:
+    metadata:
+      name: '{{metadata.name}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{spec.source.repoURL}}'
+        targetRevision: '{{spec.source.targetRevision}}'
+        path: '{{spec.source.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{spec.destination.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
