@@ -37,7 +37,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add k8s/deployment.yaml
+          git add first_app_portfolio_deployment/k8s/deployment.yaml
           # Using github.event.head_commit.message to pull your original commit message
           git commit -m "${{ github.event.head_commit.message }}"
           git push origin main
