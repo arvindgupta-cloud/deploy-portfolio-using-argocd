@@ -2,9 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: apache-service
+  namespace: default
 spec:
-  selector:
-    app: apache
+  type: LoadBalancer  
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: apache    
