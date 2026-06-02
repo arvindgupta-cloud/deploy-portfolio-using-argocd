@@ -1,20 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portfolio-app
+  name: online-shop-app
   namespace: argocd
+  annotations:
+      # The email notifier must be configured in argocd-notifications-cm.yaml, The `.email` is the name of the notifier, i.e, `service.email` in the argocd-notifications-cm.yaml.
+      # Subscribe to notifications when the app health is degraded.
+    notifications.argoproj.io/subscribe.on-health-degraded.email: "ag126667@gmail.com"  # you can add multiple email ids separated by comma like "<receiver@example.com>, <receiver2@example.com>"
+    # Subscribe to notifications when the app is successfully deployed.
+    notifications.argoproj.io/subscribe.on-deployed.email: "ag126667@gmail.com" 
 spec:
   project: default
   source:
-    repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git
+    repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git    # Replace it with your forked repo
     targetRevision: main
     path: k8s
   destination:
-    server: https://kubernetes.default.svc
+    server: https://34.57.50.62   # Replace with your Cluster Url, To get run: `argocd cluster list`
     namespace: portfolio
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
