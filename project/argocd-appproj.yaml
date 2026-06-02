@@ -1,24 +1,46 @@
-apiVersion: argoproj.io/v1alpha1 # API version for ArgoCD Projects
-kind: AppProject               # Kind is always AppProject for Projects
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
 metadata:
-  name: my-team         # Name of the Project (unique within ArgoCD)
-  namespace: argocd            # Must always be created in ArgoCD's namespace
+  name: my-team
+  namespace: argocd
 spec:
-  description: Project for my team apps   # Optional description
-  sourceRepos:                 # Which Git repos are allowed for this Project
+  description: Project for my team apps
+  sourceRepos:
     - https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git
-  destinations:                # Which clusters/namespaces apps in this Project can target
+  destinations:
     - namespace: frontend
-      server: https://136.112.221.25 # Target cluster server url
-  clusterResourceWhitelist:    # Which cluster-wide resources are allowed (e.g., CRDs)
-    - group: "*"               # '*' means allow all groups
-      kind: "*"                # '*' means allow all kinds
-  namespaceResourceWhitelist:  # Which namespace-level resources are allowed
-    - group: "*"               # Here also allowing everything
+      server: '*'  
+    - namespace: default
+      server: '*'  
+    - namespace: portfolio
+      server: '*' 
+  clusterResourceWhitelist:
+    - group: "*"
       kind: "*"
-  roles:                       # Define roles for RBAC within this Project
-    - name: my-admins    # Role name  
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  roles:
+    - name: my-admins
       description: Admins for my team
-      policies:                # Policies associated with this role
-        # syntax: - p, proj:<project-name>:<role-name>, applications, <action>, <project>/<app-name>, permission(allow|deny)
-        - p, proj:my-team:my-admins, applications, *, my-team/*, allow  # Full access to all apps in this Project, Here p = policy, proj = project, applications = resource, * = action (all actions), my-team/* = resource name pattern, allow = effect (allow or deny)
+      policies:
+        - p, proj:my-team:my-admins, applications, *, my-team/*, allow
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-my
+  namespace: portfolio
+spec:
+  project: my-team
+  source:
+    repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git
+    targetRevision: main
+    path: k8s
+  destination:
+    server: https://136.112.221.25
+    namespace: portfolio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
