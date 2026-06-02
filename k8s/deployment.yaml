@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: ag126667/portfolio:4ea0054524fe1011f161980f240a95768dd052af
+          image: ag126667/portfolio:465629b8a86f412ac74ea28efe72c86bf964a4ae
           ports:
             - containerPort: 80
