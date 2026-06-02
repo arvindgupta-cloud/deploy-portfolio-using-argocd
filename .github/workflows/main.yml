@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }} -f app/Dockerfile ./first_app_portfolio_deployment/app
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:${{ github.sha }} -f first_app_portfolio_deployment/app/Dockerfile ./first_app_portfolio_deployment/app
 
       - name: Push Docker Image
         run: |
