@@ -19,14 +19,14 @@ deploy-portfolio-using-argocd/
 ├── app/
 │   ├── index.html           # Portfolio website (main page)
 │   ├── Dockerfile           # Container image definition
-│   ├── image/              # Assets (favicon, images)
-│   └── css/                # Stylesheets
+│   └── image/              # Assets (favicon, images)
+│
 ├── k8s/
 │   ├── namespace.yaml      # Kubernetes namespace
 │   ├── deployment.yaml     # Deployment configuration
 │   └── service.yaml        # LoadBalancer service
 ├── README.md               # This file
-└── .github/workflows/      # CI/CD workflows (if present)
+└── .github/workflows/main.yml      # CI/CD workflows (if present)
 ```
 
 ## 🛠️ Tech Stack
@@ -75,13 +75,27 @@ Edit `k8s/deployment.yaml` and update the image reference:
 image: <your-username>/portfolio:IMAGE_TAG
 ```
 
-### 4. Create Namespace
+### 4. Create a cluster
+```
+gcloud container clusters create argocd-cluster \
+--zone us-central1-a \
+--num-nodes 2
+```
+
+**Configure kubectl:**
+
+```
+gcloud container clusters get-credentials argocd-cluster \
+--zone asia-south1-a
+```
+
+### 5. Create Namespace
 
 ```bash
 kubectl apply -f k8s/namespace.yaml
 ```
 
-### 5. Deploy Manually (Without ArgoCD)
+### 6. Deploy Manually (Without ArgoCD)
 
 ```bash
 kubectl apply -f k8s/
@@ -89,7 +103,7 @@ kubectl apply -f k8s/
 
 Or deploy using ArgoCD (see ArgoCD Setup below).
 
-### 6. Access the Application
+### 7. Access the Application
 
 ```bash
 kubectl port-forward -n portfolio svc/portfolio-service 8080:80
