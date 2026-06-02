@@ -72,7 +72,7 @@ Replace `<your-username>` with your Docker Hub username.
 Edit `k8s/deployment.yaml` and update the image reference:
 
 ```yaml
-image: <your-username>/portfolio:latest
+image: <your-username>/portfolio:IMAGE_TAG
 ```
 
 ### 4. Create Namespace
