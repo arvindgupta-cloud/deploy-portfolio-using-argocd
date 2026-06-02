@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/arvindgupta-cloud/deploy-portfolio-using-argocd.git    # Replace it with your forked repo
     targetRevision: main
-    path: k8s
+    path: first_app_portfolio_deployment/k8s
   destination:
     server: https://34.57.50.62   # Replace with your Cluster Url, To get run: `argocd cluster list`
     namespace: portfolio
